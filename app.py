@@ -99,7 +99,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
             z-index: -2;
         }
 
-        /* الفيديو الخلفي - تم زيادة الشفافية */
+        /* الفيديو الخلفي */
         .bg-video {
             position: fixed;
             top: 0;
@@ -113,7 +113,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
         }
 
         .bg-video.loaded {
-            opacity: 0.35;  /* تم التعديل من 0.2 إلى 0.35 */
+            opacity: 0.35;
         }
 
         .main-content {
@@ -133,6 +133,39 @@ HTML_CONTENT = '''<!DOCTYPE html>
             opacity: 1;
         }
 
+        /* تأثيرات الحركة عند الظهور */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile, .music-player, .tg-buttons, .social-links, .gallery-launcher, .views-counter {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .profile { animation-delay: 0.1s; }
+        .music-player { animation-delay: 0.3s; }
+        .tg-buttons { animation-delay: 0.5s; }
+        .social-links { animation-delay: 0.7s; }
+        .gallery-launcher { animation-delay: 0.9s; }
+        .views-counter { animation-delay: 1.1s; }
+
+        /* تأثير زجاجي محسن */
+        .music-player, .tg-btn, .social-icon, .gallery-icon-btn, .views-counter {
+            background: rgba(20, 30, 40, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 201, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
         .profile {
             display: flex;
             flex-direction: column;
@@ -147,16 +180,34 @@ HTML_CONTENT = '''<!DOCTYPE html>
             border: 3px solid #3b82c9;
             box-shadow: 0 0 20px rgba(59, 130, 201, 0.3);
             background-color: #1e2629;
+            transition: transform 0.3s ease;
         }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+
         .profile h1 {
             font-size: 2.8rem;
             font-weight: 500;
             letter-spacing: 2px;
             margin-top: 0.5rem;
             margin-bottom: 0.3rem;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
             color: #f0f5fa;
+            /* تأثير النص المضيء */
+            text-shadow: 0 0 10px #3b82c9, 0 0 20px #3b82c9, 0 0 30px #3b82c9;
+            animation: glowText 2s ease-in-out infinite alternate;
         }
+
+        @keyframes glowText {
+            from {
+                text-shadow: 0 0 10px #3b82c9, 0 0 20px #3b82c9, 0 0 30px #3b82c9;
+            }
+            to {
+                text-shadow: 0 0 15px #4d9eff, 0 0 25px #4d9eff, 0 0 35px #4d9eff, 0 0 45px #4d9eff;
+            }
+        }
+
         .description {
             color: #a8b9c6;
             font-size: 1rem;
@@ -171,18 +222,15 @@ HTML_CONTENT = '''<!DOCTYPE html>
         }
 
         .music-player {
-            background: rgba(10, 18, 22, 0.8);
-            backdrop-filter: blur(8px);
             border-radius: 80px;
             padding: 0.8rem 1.5rem;
             margin: 2rem 0 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border: 1px solid #2b3f4b;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
             flex-wrap: wrap;
             gap: 15px;
+            position: relative;
         }
 
         .track-icons {
@@ -198,7 +246,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid transparent;
-            transition: 0.2s;
+            transition: all 0.3s ease;
             object-fit: cover;
             background: #1e2f38;
         }
@@ -211,6 +259,25 @@ HTML_CONTENT = '''<!DOCTYPE html>
         .track-icon.active {
             border-color: #3b82c9;
             box-shadow: 0 0 15px #3b82c9;
+            animation: pulseAndSpin 3s infinite ease-in-out;
+        }
+
+        @keyframes pulseAndSpin {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.2) rotate(90deg);
+            }
+            50% {
+                transform: scale(1) rotate(180deg);
+            }
+            75% {
+                transform: scale(1.2) rotate(270deg);
+            }
+            100% {
+                transform: scale(1) rotate(360deg);
+            }
         }
 
         .player-controls {
@@ -249,6 +316,43 @@ HTML_CONTENT = '''<!DOCTYPE html>
             background: #2a5a75;
         }
 
+        /* شريط تقدم الموسيقى */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #3b82c9;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -4px;
+            width: 12px;
+            height: 12px;
+            background: #3b82c9;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .progress-bar:hover .progress::after {
+            opacity: 1;
+        }
+
         .tg-buttons {
             display: flex;
             gap: 1rem;
@@ -257,10 +361,6 @@ HTML_CONTENT = '''<!DOCTYPE html>
         }
         .tg-btn {
             flex: 1;
-            background: rgba(18, 32, 40, 0.8);
-            backdrop-filter: blur(5px);
-            border: 1px solid #2e5f77;
-            color: #ddeeff;
             padding: 0.9rem 0.5rem;
             border-radius: 50px;
             font-size: 1.1rem;
@@ -272,6 +372,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
             gap: 10px;
             transition: 0.25s;
             letter-spacing: 0.5px;
+            color: #ddeeff;
         }
         .tg-btn i {
             color: #3b82c9;
@@ -291,8 +392,6 @@ HTML_CONTENT = '''<!DOCTYPE html>
             margin: 1.8rem 0;
         }
         .social-icon {
-            background: rgba(15, 25, 30, 0.7);
-            backdrop-filter: blur(4px);
             width: 55px;
             height: 55px;
             border-radius: 50%;
@@ -301,7 +400,6 @@ HTML_CONTENT = '''<!DOCTYPE html>
             justify-content: center;
             font-size: 1.8rem;
             transition: 0.2s;
-            border: 1px solid #3d5663;
             color: #cbdbe5;
             text-decoration: none;
         }
@@ -327,17 +425,14 @@ HTML_CONTENT = '''<!DOCTYPE html>
             margin: 1.5rem 0 1rem;
         }
         .gallery-icon-btn {
-            background: none;
-            border: 2px solid #3b82c9;
-            color: #cde1f0;
             width: 70px;
             height: 70px;
             border-radius: 50%;
             font-size: 2.2rem;
             cursor: pointer;
             transition: 0.25s;
-            background: rgba(10, 20, 28, 0.6);
-            backdrop-filter: blur(4px);
+            color: #cde1f0;
+            border: 2px solid #3b82c9;
         }
         .gallery-icon-btn:hover {
             background: #1b3e57;
@@ -347,6 +442,23 @@ HTML_CONTENT = '''<!DOCTYPE html>
         }
         .gallery-icon-btn i {
             filter: drop-shadow(0 0 5px #3b82c9);
+        }
+
+        /* عداد المشاهدات */
+        .views-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            margin: 1rem auto;
+            font-size: 0.9rem;
+            color: #a8b9c6;
+            border: 1px solid rgba(59, 130, 201, 0.3);
+        }
+
+        .views-counter i {
+            color: #3b82c9;
         }
 
         .gallery-page {
@@ -394,12 +506,14 @@ HTML_CONTENT = '''<!DOCTYPE html>
         .close-gallery:hover {
             color: #f0f8ff;
         }
+        
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-top: 1rem;
         }
+        
         .gallery-item {
             background: #101e26;
             border-radius: 20px;
@@ -408,11 +522,30 @@ HTML_CONTENT = '''<!DOCTYPE html>
             border: 1px solid #2d5568;
             transition: 0.2s;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+            position: relative;
         }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(59, 130, 201, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
         .gallery-item:hover {
             transform: scale(1.02);
             border-color: #4b8bb0;
         }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
         .gallery-item img {
             width: 100%;
             height: 100%;
@@ -453,7 +586,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
     <!-- صفحة البداية -->
     <div class="splash-screen" id="splashScreen">
         <div class="splash-content">
-            <h1>ZAKARIA</h1>
+            <h1 id="splashName">ZAKARIA</h1>
             <p>CLICK ANYWHERE TO CONTINUE...</p>
         </div>
     </div>
@@ -469,7 +602,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
     <div class="main-content" id="mainPage">
         <div class="profile">
             <img src="/imag.jpg" alt="profile" class="profile-img" onerror="this.src='https://via.placeholder.com/130x130?text=ZAKARIA'">
-            <h1>ZAKARIA</h1>
+            <h1 id="profileName"></h1>
             <div class="description">free games · bots · spam · tools</div>
         </div>
 
@@ -479,6 +612,10 @@ HTML_CONTENT = '''<!DOCTYPE html>
                 <button id="prevTrackBtn"><i class="fas fa-step-backward"></i></button>
                 <button id="playPauseBtn"><i class="fas fa-play"></i></button>
                 <button id="nextTrackBtn"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <!-- شريط تقدم الموسيقى -->
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="musicProgress"></div>
             </div>
         </div>
 
@@ -491,6 +628,12 @@ HTML_CONTENT = '''<!DOCTYPE html>
             <a href="https://t.me/ZikoB0SS" target="_blank" class="social-icon fab fa-telegram"></a>
             <a href="https://youtube.com/@ziko_boss?si=ympG79N5FiLO0qZI" target="_blank" class="social-icon fab fa-youtube"></a>
             <a href="https://www.facebook.com/profile.php?id=61586247175238" target="_blank" class="social-icon fab fa-facebook-f"></a>
+        </div>
+
+        <!-- عداد المشاهدات -->
+        <div class="views-counter">
+            <i class="fas fa-eye"></i>
+            <span id="viewCount">1.2k</span> views
         </div>
 
         <div class="gallery-launcher">
@@ -522,6 +665,9 @@ HTML_CONTENT = '''<!DOCTYPE html>
             // عناصر الصفحة
             const splashScreen = document.getElementById('splashScreen');
             const mainPage = document.getElementById('mainPage');
+            const profileName = document.getElementById('profileName');
+            const splashName = document.getElementById('splashName');
+            const originalText = "ZAKARIA";
             
             // تعريف قائمة المقاطع الصوتية
             const tracks = [
@@ -541,6 +687,8 @@ HTML_CONTENT = '''<!DOCTYPE html>
             const prevBtn = document.getElementById('prevTrackBtn');
             const nextBtn = document.getElementById('nextTrackBtn');
             const trackIconsDiv = document.getElementById('trackIcons');
+            const progressBar = document.getElementById('progressBar');
+            const musicProgress = document.getElementById('musicProgress');
 
             // إنشاء أيقونات المقاطع
             tracks.forEach((track, index) => {
@@ -582,6 +730,19 @@ HTML_CONTENT = '''<!DOCTYPE html>
                 });
             }
 
+            // تحديث شريط التقدم
+            audio.addEventListener('timeupdate', function() {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                musicProgress.style.width = progress + '%';
+            });
+
+            // النقر على شريط التقدم للانتقال
+            progressBar.addEventListener('click', function(e) {
+                const rect = progressBar.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                audio.currentTime = pos * audio.duration;
+            });
+
             // أزرار التحكم
             playPauseBtn.addEventListener('click', function() {
                 if (audio.paused) {
@@ -617,12 +778,30 @@ HTML_CONTENT = '''<!DOCTYPE html>
                 updateActiveIcon();
             });
 
+            // تأثير الكتابة البطيء للاسم
+            function typeWriter() {
+                profileName.textContent = '';
+                splashName.textContent = '';
+                let i = 0;
+                
+                function write() {
+                    if (i < originalText.length) {
+                        profileName.textContent += originalText.charAt(i);
+                        splashName.textContent += originalText.charAt(i);
+                        i++;
+                        setTimeout(write, 200); // 200 ملي ثانية = كتابة بطيئة
+                    }
+                }
+                write();
+            }
+
             // عند الضغط على صفحة البداية
             splashScreen.addEventListener('click', function() {
                 splashScreen.classList.add('hidden');
                 mainPage.classList.add('visible');
                 audio.play().catch(e => console.log('Playback started after click:', e));
                 playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                setTimeout(typeWriter, 500);
             });
 
             // معرض الصور
@@ -653,6 +832,14 @@ HTML_CONTENT = '''<!DOCTYPE html>
                 item.appendChild(img);
                 galleryGrid.appendChild(item);
             }
+
+            // تحديث عداد المشاهدات بشكل عشوائي
+            const viewCount = document.getElementById('viewCount');
+            setInterval(() => {
+                const current = parseFloat(viewCount.textContent.replace('k', ''));
+                const newCount = (current + 0.1).toFixed(1) + 'k';
+                viewCount.textContent = newCount;
+            }, 30000);
         })();
     </script>
 </body>
