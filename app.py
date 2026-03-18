@@ -10,6 +10,10 @@ HTML_CONTENT = '''<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAKARIA · personal page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Preload الفيديو لتحميل أسرع -->
+    <link rel="preload" as="video" href="/bg-loop.mp4" type="video/mp4">
+    
     <style>
         * {
             margin: 0;
@@ -27,7 +31,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
             overflow-x: hidden;
         }
 
-        /* صفحة البداية - اضغط للاستمرار */
+        /* صفحة البداية */
         .splash-screen {
             position: fixed;
             top: 0;
@@ -84,20 +88,33 @@ HTML_CONTENT = '''<!DOCTYPE html>
             100% { box-shadow: 0 0 10px #3b82c9; }
         }
 
+        /* خلفية ثابتة تظهر أثناء تحميل الفيديو */
+        .video-fallback {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b0f10;
+            z-index: -2;
+        }
+
+        /* الفيديو الخلفي - تم زيادة الشفافية */
         .bg-video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: auto;
-    height: auto;
-    max-width: 100vw;
-    max-height: 100vh;
-    z-index: -1;
-    object-fit: contain;
-    opacity: 0.2;
-    filter: grayscale(0.3) brightness(0.6);
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            z-index: -1;
+        }
+
+        .bg-video.loaded {
+            opacity: 0.35;  /* تم التعديل من 0.2 إلى 0.35 */
+        }
 
         .main-content {
             max-width: 700px;
@@ -433,7 +450,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
 </head>
 <body>
 
-    <!-- صفحة البداية - اضغط للاستمرار -->
+    <!-- صفحة البداية -->
     <div class="splash-screen" id="splashScreen">
         <div class="splash-content">
             <h1>ZAKARIA</h1>
@@ -441,14 +458,18 @@ HTML_CONTENT = '''<!DOCTYPE html>
         </div>
     </div>
 
-    <video class="bg-video" autoplay muted loop playsinline>
+    <!-- خلفية ثابتة -->
+    <div class="video-fallback"></div>
+
+    <!-- الفيديو الخلفي -->
+    <video class="bg-video" id="bgVideo" autoplay muted loop playsinline preload="auto" fetchpriority="high">
         <source src="/bg-loop.mp4" type="video/mp4">
     </video>
 
     <div class="main-content" id="mainPage">
         <div class="profile">
             <img src="/imag.jpg" alt="profile" class="profile-img" onerror="this.src='https://via.placeholder.com/130x130?text=ZAKARIA'">
-            <h1>ZAKARIA HN</h1>
+            <h1>ZAKARIA</h1>
             <div class="description">free games · bots · spam · tools</div>
         </div>
 
@@ -477,7 +498,7 @@ HTML_CONTENT = '''<!DOCTYPE html>
         </div>
 
         <div class="footer-desc">
-            <span>⚡️ @ZikoB0SS ⚡️</span>
+            <span> @ZikoB0SS </span>
         </div>
     </div>
 
@@ -492,6 +513,12 @@ HTML_CONTENT = '''<!DOCTYPE html>
 
     <script>
         (function() {
+            // إظهار الفيديو بعد تحميله
+            const video = document.getElementById('bgVideo');
+            video.addEventListener('loadeddata', function() {
+                video.classList.add('loaded');
+            });
+
             // عناصر الصفحة
             const splashScreen = document.getElementById('splashScreen');
             const mainPage = document.getElementById('mainPage');
@@ -592,11 +619,8 @@ HTML_CONTENT = '''<!DOCTYPE html>
 
             // عند الضغط على صفحة البداية
             splashScreen.addEventListener('click', function() {
-                // إخفاء صفحة البداية
                 splashScreen.classList.add('hidden');
-                // إظهار المحتوى الرئيسي
                 mainPage.classList.add('visible');
-                // تشغيل الموسيقى
                 audio.play().catch(e => console.log('Playback started after click:', e));
                 playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
             });
