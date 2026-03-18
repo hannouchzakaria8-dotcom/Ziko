@@ -1,0 +1,26 @@
+{
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/audio/(.*)",
+      "dest": "/app.py"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/app.py"
+    },
+    {
+      "src": "/(imag.jpg|bg-loop.mp4|favicon.ico)",
+      "dest": "/app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/app.py"
+    }
+  ]
+}
