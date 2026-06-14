@@ -24,6 +24,7 @@
         :root {
             --primary: #e53935;
             --primary-dark: #b71c1c;
+            --primary-light: #ff5e5e;
             --bg-sidebar: #0f0f0f;
             --bg-main: #171717;
             --bg-header: #080808;
@@ -31,6 +32,8 @@
             --msg-user: #2c2c2c;
             --msg-bot: #1e2a2e;
             --hover: #202020;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
         }
 
         /* Lock Screen */
@@ -46,12 +49,13 @@
         }
 
         .lock-card {
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(10,10,10,0.9);
             backdrop-filter: blur(10px);
             padding: 2rem;
             border-radius: 2rem;
             text-align: center;
-            border: 1px solid rgba(229, 57, 53, 0.4);
+            border: 1px solid rgba(229,57,53,0.4);
+            box-shadow: 0 0 40px rgba(229,57,53,0.2);
             width: 90%;
             max-width: 360px;
         }
@@ -63,6 +67,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            margin-bottom: 0.5rem;
         }
 
         #passwordInput {
@@ -73,6 +78,7 @@
             color: white;
             width: 100%;
             margin: 20px 0;
+            font-size: 1rem;
         }
 
         button {
@@ -84,6 +90,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            font-family: inherit;
         }
 
         button:hover {
@@ -91,7 +98,7 @@
             transform: scale(0.97);
         }
 
-        /* Main App */
+        /* Main App Container */
         #appContainer {
             display: none;
             height: 100vh;
@@ -106,6 +113,8 @@
             align-items: center;
             gap: 12px;
             border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
         }
 
         .menu-btn, .back-btn {
@@ -113,10 +122,10 @@
             font-size: 1.5rem;
             width: 44px;
             height: 44px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 50%;
         }
 
         .menu-btn:hover, .back-btn:hover {
@@ -128,6 +137,7 @@
             flex: 1;
             font-size: 1.3rem;
             font-weight: 600;
+            letter-spacing: -0.3px;
         }
 
         .main-layout {
@@ -137,15 +147,17 @@
             position: relative;
         }
 
-        /* Sidebar */
+        /* Sidebar (Bots) */
         .sidebar {
             width: 280px;
             background: var(--bg-sidebar);
             border-left: 1px solid var(--border);
             padding: 20px;
-            transition: width 0.2s ease;
+            transition: width 0.2s ease-in-out, padding 0.2s, opacity 0.2s;
             overflow-x: hidden;
             white-space: nowrap;
+            opacity: 1;
+            z-index: 20;
         }
 
         .sidebar.hidden {
@@ -188,7 +200,12 @@
             border: 1px solid var(--primary);
         }
 
-        /* Chat List */
+        .add-bot-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Chat List (Chats) */
         .chat-list {
             width: 340px;
             background: var(--bg-main);
@@ -222,6 +239,7 @@
             gap: 14px;
             padding: 12px 20px;
             cursor: pointer;
+            transition: 0.1s;
             border-bottom: 1px solid var(--border);
         }
 
@@ -240,6 +258,7 @@
             font-weight: bold;
             font-size: 1.4rem;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .chat-item .avatar img {
@@ -250,6 +269,7 @@
 
         .chat-info {
             flex: 1;
+            overflow: hidden;
         }
 
         .chat-title {
@@ -261,6 +281,9 @@
 
         .chat-name {
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-type {
@@ -268,12 +291,16 @@
             background: #2a2a2a;
             padding: 2px 8px;
             border-radius: 30px;
+            white-space: nowrap;
         }
 
         .last-msg {
             font-size: 0.8rem;
             color: #aaa;
             margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Chat Area */
@@ -302,6 +329,13 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .chat-header .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .bot-settings-btn {
@@ -316,12 +350,16 @@
             border-radius: 50%;
             width: 40px;
             height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .bot-settings-btn:hover {
             background: var(--hover);
         }
 
+        /* Messages Container */
         .messages {
             flex: 1;
             padding: 20px 16px;
@@ -329,16 +367,19 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            background-image: radial-gradient(circle at 10% 20%, rgba(229, 57, 53, 0.03) 2%, transparent 2.5%);
+            background-image: radial-gradient(circle at 10% 20%, rgba(229,57,53,0.03) 2%, transparent 2.5%);
             background-size: 28px 28px;
         }
 
+        /* Message Bubbles */
         .msg {
             max-width: 80%;
             padding: 10px 14px;
             border-radius: 22px;
+            position: relative;
+            word-break: break-word;
             animation: fadeInUp 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
         }
 
@@ -380,6 +421,7 @@
             width: 22px;
             height: 22px;
             border-radius: 50%;
+            object-fit: cover;
         }
 
         .msg img, .msg video {
@@ -400,13 +442,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .reply-preview .reply-content {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .cancel-reply-btn {
             background: #444;
             padding: 4px 12px;
             border-radius: 20px;
+            font-size: 0.7rem;
             cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .cancel-reply-btn:hover {
+            background: #555;
         }
 
         /* Input Area */
@@ -432,21 +489,27 @@
             padding: 12px 16px;
             border-radius: 30px;
             color: white;
+            font-size: 1rem;
         }
 
         .attach-btn, .send-btn {
             background: transparent;
             width: 44px;
             height: 44px;
+            padding: 0;
             border-radius: 50%;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
         }
 
         .send-btn {
             background: var(--primary);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
         }
 
         /* Context Menu */
@@ -454,8 +517,9 @@
             position: fixed;
             background: #1e1e1e;
             border-radius: 16px;
-            box-shadow: 0 4px 12px black;
+            box-shadow: var(--shadow-md);
             z-index: 3000;
+            overflow: hidden;
             min-width: 160px;
             border: 1px solid #333;
         }
@@ -466,6 +530,8 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
+            transition: 0.1s;
+            font-size: 0.9rem;
         }
 
         .context-menu-item:hover {
@@ -481,7 +547,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.8);
             backdrop-filter: blur(5px);
             align-items: center;
             justify-content: center;
@@ -496,6 +562,7 @@
             max-width: 420px;
             max-height: 80vh;
             overflow-y: auto;
+            border: 1px solid #333;
         }
 
         .reaction-grid {
@@ -512,6 +579,7 @@
             padding: 8px;
             text-align: center;
             cursor: pointer;
+            transition: 0.1s;
         }
 
         .reaction-emoji:hover {
@@ -519,24 +587,33 @@
             transform: scale(1.1);
         }
 
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
                 position: absolute;
+                top: 0;
+                right: 0;
                 height: 100%;
                 z-index: 30;
                 box-shadow: 0 0 20px black;
             }
             .sidebar.hidden {
                 width: 0;
+                padding: 0;
                 visibility: hidden;
             }
             .chat-list {
                 width: 100%;
                 position: absolute;
+                top: 0;
+                right: 0;
+                height: 100%;
+                z-index: 15;
+                background: var(--bg-main);
             }
             .chat-area {
                 width: 100%;
+                z-index: 20;
             }
             .msg {
                 max-width: 85%;
@@ -550,7 +627,8 @@
     <div id="lockScreen">
         <div class="lock-card">
             <div class="lock-title">XcT MANAGER</div>
-            <input type="password" id="passwordInput" placeholder="كلمة المرور">
+            <p style="margin: 8px 0; opacity:0.7;">تحكم كامل ببوتات تيليجرام</p>
+            <input type="password" id="passwordInput" placeholder="••••••">
             <button onclick="checkPassword()">دخول</button>
             <p id="lockStatus" style="color: var(--primary); margin-top: 12px;"></p>
         </div>
@@ -561,14 +639,14 @@
         <div class="topbar">
             <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <h2>XcT</h2>
-            <button class="back-btn" id="globalBackBtn" onclick="closeCurrentChat()" style="display: none;"><i class="fas fa-arrow-right"></i></button>
+            <button class="back-btn" id="globalBackBtn" onclick="closeCurrentChat()" style="display:none;"><i class="fas fa-arrow-right"></i></button>
         </div>
         <div class="main-layout">
             <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <h3><i class="fas fa-robot"></i> بوتاتي</h3>
                 <button class="add-bot-btn" onclick="showAddBot()"><i class="fas fa-plus"></i> إضافة بوت</button>
-                <hr style="margin: 16px 0; border-color: #2a2a2a;">
+                <hr style="margin: 16px 0; border-color:#2a2a2a;">
                 <div id="botList"></div>
             </div>
 
@@ -577,7 +655,7 @@
                 <div class="chat-list-header">
                     <h3><i class="fas fa-comments"></i> المحادثات</h3>
                     <input type="text" class="search-box" id="searchChatInput" placeholder="إيدي مجموعة أو مستخدم">
-                    <button onclick="joinChatById()" style="width: 100%; background: #1f1f1f;">انضمام</button>
+                    <button onclick="joinChatById()" style="width:100%; background:#1f1f1f; border:1px solid #444;">انضمام</button>
                 </div>
                 <div id="chatList"></div>
             </div>
@@ -591,9 +669,9 @@
     <div class="modal" id="addBotModal">
         <div class="modal-content">
             <h3>➕ بوت جديد</h3>
-            <input type="text" id="newBotToken" placeholder="التوكن" style="width: 100%; margin: 10px 0;">
-            <button onclick="addBot()">إضافة</button>
-            <button onclick="closeAddBot()" style="background: #333; margin-top: 8px;">إلغاء</button>
+            <input type="text" id="newBotToken" placeholder="التوكن" style="width:100%; margin:10px 0; padding:12px; border-radius:30px;">
+            <button onclick="addBot()" style="width:100%;">إضافة</button>
+            <button onclick="closeAddBot()" style="background:#333; margin-top:8px;">إلغاء</button>
         </div>
     </div>
 
@@ -601,7 +679,7 @@
         <div class="modal-content">
             <h3>اختر تفاعلاً</h3>
             <div id="reactionsGrid" class="reaction-grid"></div>
-            <button onclick="closeReactionModal()">إلغاء</button>
+            <button onclick="closeReactionModal()" style="background:#333;">إلغاء</button>
         </div>
     </div>
 
@@ -611,7 +689,8 @@
 
     <script>
         // ================== Configuration ==================
-        const API_BASE = "https://xct-manager.up.railway.app"; // ⚠️ استبدل برابط خادمك
+        // ⚠️ استبدل هذا الرابط برابط الخادم الخاص بك (احرص على عدم وجود slash في النهاية)
+        const API_BASE = "https://xct-manager.up.railway.app";
         let currentToken = null;
         let currentChatId = null;
         let selectedMessageId = null;
@@ -626,12 +705,17 @@
 
         // ================== Helper Functions ==================
         async function apiCall(endpoint, options = {}) {
-            const response = await fetch(`${API_BASE}${endpoint}`, options);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return await response.json();
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error(`API call failed: ${endpoint}`, error);
+                throw error;
+            }
         }
 
-        // ================== Auth ==================
+        // ================== Auth and Initial Load ==================
         async function checkPassword() {
             const pw = document.getElementById("passwordInput").value;
             try {
@@ -659,10 +743,6 @@
 
         function closeAddBot() {
             document.getElementById("addBotModal").style.display = "none";
-        }
-
-        function closeReactionModal() {
-            document.getElementById("reactionsModal").style.display = "none";
         }
 
         async function addBot() {
@@ -745,7 +825,7 @@
             }
         }
 
-        // ================== Open Chat ==================
+        // ================== Open Chat & Messages ==================
         async function openChat(chatId) {
             currentChatId = chatId;
             if (window.innerWidth <= 768) {
@@ -757,6 +837,7 @@
             document.getElementById("globalBackBtn").style.display = (window.innerWidth <= 768) ? "block" : "none";
 
             try {
+                // 🔥 التعديل الأهم: إضافة token إلى طلب get_messages
                 const data = await apiCall(`/get_messages/${chatId}?token=${currentToken}&limit=50`);
                 const info = data.info;
                 const typeIcon = info?.type === "group" ? "👥" : (info?.type === "channel" ? "📢" : "👤");
@@ -798,6 +879,7 @@
                 resetReplyPreview();
             } catch (error) {
                 console.error("Failed to open chat", error);
+                alert("حدث خطأ أثناء فتح الدردشة. تأكد من أن الخادم يعمل.");
             }
         }
 
@@ -905,7 +987,6 @@
             }, 10);
         }
 
-        // ================== Actions ==================
         async function pinMessage(msgId) {
             try {
                 await apiCall("/pin_message", {
@@ -973,7 +1054,7 @@
             if (!container) return;
 
             if (currentReplyTo) {
-                container.innerHTML = `
+                const previewHtml = `
                     <div class="reply-preview">
                         <div class="reply-content">
                             <strong>↩️ رد على ${currentReplyTo.sender_name}:</strong>
@@ -982,6 +1063,7 @@
                         <div class="cancel-reply-btn" onclick="resetReplyPreview()">إلغاء</div>
                     </div>
                 `;
+                container.innerHTML = previewHtml;
             } else {
                 container.innerHTML = "";
             }
@@ -998,7 +1080,7 @@
             const text = input.value.trim();
             if (!text) return;
 
-            const payload = { token: currentToken, chat_id: currentChatId, text: text };
+            let payload = { token: currentToken, chat_id: currentChatId, text: text };
             if (currentReplyTo) {
                 payload.reply_to_message_id = currentReplyTo.message_id;
             }
@@ -1053,6 +1135,10 @@
             const grid = document.getElementById("reactionsGrid");
             grid.innerHTML = REACTIONS.map(e => `<div class="reaction-emoji" onclick="sendReaction('${e}')">${e}</div>`).join("");
             document.getElementById("reactionsModal").style.display = "flex";
+        }
+
+        function closeReactionModal() {
+            document.getElementById("reactionsModal").style.display = "none";
         }
 
         async function sendReaction(emoji) {
@@ -1142,7 +1228,7 @@
                     <button onclick="setBotPhoto()">رفع الصورة</button>
                     <hr style="margin: 20px 0;">
                     <button onclick="logoutBot()" style="background:#333; border:1px solid var(--primary); width:100%;">
-                        🚪 تسجيل الخروج (حذف البوت)
+                        🚪 تسجيل الخروج (حذف البوت من هذه اللوحة فقط، لا يحذف من تلغرام)
                     </button>
                     <button onclick="closeSettingsModal()" style="background:#333; width:100%; margin-top:15px;">إغلاق</button>
                 `;
@@ -1197,14 +1283,14 @@
         }
 
         async function logoutBot() {
-            if (!confirm("⚠️ تسجيل الخروج سيحذف البوت نهائياً. متأكد؟")) return;
+            if (!confirm("⚠️ تسجيل الخروج سيحذف البوت من هذه اللوحة فقط. البوت يبقى موجوداً في تلغرام. متأكد؟")) return;
             try {
                 await apiCall("/delete_bot", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: currentToken })
                 });
-                alert("تم تسجيل الخروج");
+                alert("تم تسجيل الخروج من البوت");
                 closeSettingsModal();
                 if (ws) ws.close();
                 currentToken = null;
